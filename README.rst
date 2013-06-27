@@ -1,7 +1,7 @@
 Overview
 --------
 
-"Though shall tune your SVMs".
+"Thou shall tune your SVMs".
 
 
 Usage
@@ -15,7 +15,6 @@ Usage
 Dependencies
 ------------
 
-- `nltk <http://nltk.org/>`_ for running Naive Bayes classifier
 - `scikit-learn <http://scikit-learn.org/stable/>`_ for SVM classifier
 
 Data
