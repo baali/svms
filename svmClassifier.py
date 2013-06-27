@@ -1,42 +1,39 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
-# based on https://bitbucket.org/mimirtech/nltk-bayes-classifier
+#
+
 from sklearn import svm
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.grid_search import GridSearchCV
 from sklearn.cross_validation import train_test_split
-import collections
+import os
 
-train_samples = collections.OrderedDict({
-    'I hate you and you are a bad person': 'neg',
-    'I love you and you are a good person': 'pos',
-    'I fail at everything and I want to kill people' : 'neg',
-    'I win at everything and I want to love people' : 'pos',
-    'sad are things are happening. fml' : 'neg',
-    'good are things are happening. gbu' : 'pos',
-    'I am so poor' : 'neg',
-    'I am so rich' : 'pos',
-    'I hate you mommy ! You are my terrible person' : 'neg',
-    'I love you mommy ! You are my amazing person' : 'pos',
-    'I want to kill butterflies since they make me sad' : 'neg',
-    'I want to chase butterflies since they make me happy' : 'pos',
-    'I want to hurt bunnies' : 'neg',
-    'I want to hug bunnies' : 'pos',
-    'You make me frown' : 'neg',
-    'You make me smile' : 'pos',
-    'You are a terrible person and everything you do is bad' : 'neg',
-    'I love you all and you make me happy' : 'pos',
-    'I frown whenever I see you in a poor state of mind' : 'neg',
-    'Finally getting rich from my ideas. They make me smile.' : 'pos',
-    'My mommy is poor' : 'neg',
-    'I love butterflies. Yay for happy' : 'pos',
-    'Everything is fail today and I hate stuff' : 'neg',
-})
- 
 if __name__ == '__main__':
-    # divide data in training and testing samples
+    CURR_DIR = os.path.dirname(os.path.abspath(__file__))
+    DATA_FILE_PATH = os.path.join(CURR_DIR, 'test_file')
+    # complete category list is ['Antiques', 'Art', 'Baby', 'Books',
+    # 'Crafts', 'Jewelry & Watches', 'Music', 'Stamps', 'Tickets',
+    # 'Travel']
+    # limiting data to just to categories for now.
+    categories = ['Music',
+                  'Stamps',
+                  ]
+    data = open(DATA_FILE_PATH).read().strip()
+    lines = data.split('\n')
+    sk_data = {}
+    sk_data['target'] = []
+    sk_data['data'] = []
+
+    for line in lines:
+        target, text = line.split('\t', 1)
+        if target.strip() in categories:
+            sk_data['target'].append(target.strip())
+            sk_data['data'].append(text.strip())
+    # divide data in training and testing samples            
     X_train, X_test, y_train, y_test = train_test_split(
-        train_samples.keys(), train_samples.values(), test_size=0.2, random_state=42)
+        sk_data['data'], sk_data['target'], test_size=0.2, random_state=0)    
+
     # tokenizing and creating sparse array from words of text
     cv = CountVectorizer()
     cv_arr_train = cv.fit_transform(X_train)
